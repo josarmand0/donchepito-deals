@@ -25,10 +25,9 @@ export default function Home({ deals }) {
   return (
     <div style={{ 
       fontFamily: 'system-ui, -apple-system, sans-serif', 
-      padding: '20px 10px', 
-      maxWidth: '1100px', 
-      margin: '0 auto', /* ✅ THIS CENTERS THE GRID IN THE IFRAME */
-      width: '100%',
+      padding: '20px 15px', 
+      width: '100%', 
+      margin: '0 auto',
       boxSizing: 'border-box'
     }}>
       <Head>
@@ -38,15 +37,13 @@ export default function Home({ deals }) {
       
       <style>{`
         .hide-scroll::-webkit-scrollbar { display: none; }
-        
-        @media (min-width: 900px) {
+        @media (min-width: 769px) {
           .deals-container {
             display: grid !important;
-            grid-template-columns: repeat(4, 1fr) !important;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
             gap: 20px !important;
             overflow-x: visible !important;
             padding-bottom: 10px !important;
-            justify-items: center; /* ✅ Centers items in their grid cells */
           }
         }
       `}</style>
@@ -73,8 +70,7 @@ export default function Home({ deals }) {
           paddingBottom: '20px', 
           scrollbarWidth: 'none', 
           WebkitOverflowScrolling: 'touch',
-          width: '100%',
-          justifyContent: 'flex-start'
+          width: '100%'
         }}>
           {deals.map((deal) => (
             <article key={deal.id} style={{ 
@@ -88,9 +84,7 @@ export default function Home({ deals }) {
               display: 'flex', 
               flexDirection: 'column', 
               justifyContent: 'space-between',
-              scrollSnapAlign: 'center',
-              minWidth: '220px',
-              width: '100%'
+              scrollSnapAlign: 'center'
             }}>
               <div>
                 {deal.image_url && (
