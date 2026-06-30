@@ -23,7 +23,14 @@ export async function getServerSideProps() {
 
 export default function Home({ deals }) {
   return (
-    <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif', padding: '20px 5px', maxWidth: '1100px', margin: '0 auto' }}>
+    <div style={{ 
+      fontFamily: 'system-ui, -apple-system, sans-serif', 
+      padding: '20px 10px', 
+      maxWidth: '1100px', 
+      margin: '0 auto', /* ✅ THIS CENTERS THE GRID IN THE IFRAME */
+      width: '100%',
+      boxSizing: 'border-box'
+    }}>
       <Head>
         <title>Don Chepito Curated Deals</title>
         <meta name="description" content="Ofertas seleccionadas a mano para ti." />
@@ -31,12 +38,20 @@ export default function Home({ deals }) {
       
       <style>{`
         .hide-scroll::-webkit-scrollbar { display: none; }
-        @media (min-width: 769px) {
-          .swipe-belt { justify-content: center; }
+        
+        @media (min-width: 900px) {
+          .deals-container {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 20px !important;
+            overflow-x: visible !important;
+            padding-bottom: 10px !important;
+            justify-items: center; /* ✅ Centers items in their grid cells */
+          }
         }
       `}</style>
 
-      <header style={{ textAlign: 'center', marginBottom: '20px' }}>
+      <header style={{ textAlign: 'center', marginBottom: '25px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: '800', color: '#1a1a1a', marginTop: '10px' }}>
           🔥 Don Chepito Deals
         </h1>
@@ -49,7 +64,7 @@ export default function Home({ deals }) {
         <p style={{ textAlign: 'center', color: '#777', fontWeight: '500' }}>El inventario se está actualizando. Vuelve pronto.</p>
       ) : (
         <div 
-          className="hide-scroll swipe-belt"
+          className="hide-scroll deals-container"
           style={{ 
           display: 'flex', 
           gap: '16px', 
@@ -57,7 +72,9 @@ export default function Home({ deals }) {
           scrollSnapType: 'x mandatory', 
           paddingBottom: '20px', 
           scrollbarWidth: 'none', 
-          WebkitOverflowScrolling: 'touch' 
+          WebkitOverflowScrolling: 'touch',
+          width: '100%',
+          justifyContent: 'flex-start'
         }}>
           {deals.map((deal) => (
             <article key={deal.id} style={{ 
@@ -72,7 +89,8 @@ export default function Home({ deals }) {
               flexDirection: 'column', 
               justifyContent: 'space-between',
               scrollSnapAlign: 'center',
-              minWidth: '250px'
+              minWidth: '220px',
+              width: '100%'
             }}>
               <div>
                 {deal.image_url && (
