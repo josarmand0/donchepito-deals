@@ -24,7 +24,6 @@ export async function getServerSideProps() {
 
 export default function Home({ deals }) {
   return (
-    // The Elite Sensor Wrap: This mathematically tracks the DOM and beams the height to the parent site
     <SeamlessIframeWrapper>
       <main style={{ 
         fontFamily: 'system-ui, -apple-system, sans-serif', 
@@ -38,24 +37,50 @@ export default function Home({ deals }) {
           <meta name="description" content="Ofertas seleccionadas a mano para ti." />
         </Head>
         
+        {/* 1% Elite CSS Architecture: Cleanly separates Mobile Swipe from Desktop Grid */}
         <style>{`
-          .hide-scroll::-webkit-scrollbar { display: none; }
+          .deals-container {
+            /* Default Mobile View: Marquee Swipe */
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 20px;
+            scrollbar-width: none; /* Firefox */
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+          }
+          
+          /* Hide scrollbar for Chrome, Safari and Opera */
+          .deals-container::-webkit-scrollbar { 
+            display: none; 
+          }
+
+          .deal-card {
+            flex: 0 0 85%;
+            scroll-snap-align: center;
+          }
+
+          /* Desktop View: Auto-Row Grid */
           @media (min-width: 769px) {
             .deals-container {
-              display: grid !important;
-              grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
-              gap: 20px !important;
-              overflow-x: visible !important;
-              padding-bottom: 10px !important;
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+              gap: 20px;
+              overflow-x: visible; /* Kills the swipe */
+              padding-bottom: 10px;
+            }
+            .deal-card {
+              flex: auto; /* Resets the mobile width */
             }
           }
         `}</style>
 
         <header style={{ textAlign: 'center', marginBottom: '25px' }}>
-          <h1 style={{ fontSize: '28px', fontWeight: '800', color: '#1a1a1a', marginTop: '10px' }}>
+          <h1 style={{ fontSize: '28px', fontWeight: '800', color: '#1a1a1a', margin: '0 0 10px 0' }}>
             🔥 Don Chepito Deals
           </h1>
-          <p style={{ color: '#555' }}>
+          <p style={{ color: '#555', margin: '0' }}>
             Desliza para descubrir ofertas seleccionadas a mano.
           </p>
         </header>
@@ -63,21 +88,9 @@ export default function Home({ deals }) {
         {deals.length === 0 ? (
           <p style={{ textAlign: 'center', color: '#777', fontWeight: '500' }}>El inventario se está actualizando. Vuelve pronto.</p>
         ) : (
-          <div 
-            className="hide-scroll deals-container"
-            style={{ 
-            display: 'flex', 
-            gap: '16px', 
-            overflowX: 'auto', 
-            scrollSnapType: 'x mandatory', 
-            paddingBottom: '20px', 
-            scrollbarWidth: 'none', 
-            WebkitOverflowScrolling: 'touch',
-            width: '100%'
-          }}>
+          <div className="deals-container">
             {deals.map((deal) => (
-              <article key={deal.id} style={{ 
-                flex: '0 0 85%', 
+              <article key={deal.id} className="deal-card" style={{ 
                 background: 'white', 
                 border: '1px solid #e5e7eb', 
                 borderRadius: '12px', 
@@ -86,8 +99,7 @@ export default function Home({ deals }) {
                 boxShadow: '0 2px 8px rgba(0,0,0,0.05)', 
                 display: 'flex', 
                 flexDirection: 'column', 
-                justifyContent: 'space-between',
-                scrollSnapAlign: 'center'
+                justifyContent: 'space-between'
               }}>
                 <div>
                   {deal.image_url && (
@@ -108,7 +120,7 @@ export default function Home({ deals }) {
                     ${deal.price}
                   </p>
                 </div>
-                <a href={deal.link_url} target="_blank" rel="noopener noreferrer nofollow" style={{ display: 'block', background: '#EEC942', color: '#000', textDecoration: 'none', padding: '10px', borderRadius: '8px', fontWeight: '700', fontSize: '13px', transition: 'opacity 0.2s' }}>
+                <a href={deal.link_url} target="_blank" rel="noopener noreferrer nofollow" style={{ display: 'block', background: '#EEC942', color: '#000', textDecoration: 'none', padding: '10px', borderRadius: '8px', fontWeight: '700', fontSize: '13px', transition: 'transform 0.2s' }}>
                   Ver en Amazon
                 </a>
               </article>
@@ -116,9 +128,16 @@ export default function Home({ deals }) {
           </div>
         )}
         
-        <p style={{ textAlign: 'center', fontSize: '12px', color: '#999', marginTop: '5px' }}>
+        {/* Helper text only displays on smaller screens where swiping is needed */}
+        <p style={{ textAlign: 'center', fontSize: '12px', color: '#999', marginTop: '10px' }} className="mobile-only-text">
           👉 Desliza para ver más ofertas
         </p>
+
+        <style>{`
+          @media (min-width: 769px) {
+            .mobile-only-text { display: none; }
+          }
+        `}</style>
       </main>
     </SeamlessIframeWrapper>
   );
